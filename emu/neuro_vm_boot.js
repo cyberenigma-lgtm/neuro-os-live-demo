@@ -131,19 +131,23 @@ async function startNeuroVM() {
       console.log("[VBE]", msg);
       if (serialLog) serialLog.textContent += "\n[VBE] " + msg + "\n";
 
-      // Check canvas status periodically
+      // Check canvas and screen container children status
       setInterval(() => {
-        const c = document.querySelector("#screen_container canvas");
-        if (c && c.width > 0 && c.height > 0) {
-          const ctx = c.getContext("2d");
-          if (ctx) {
+        const cont = document.getElementById("screen_container");
+        if (cont) {
+          const children = Array.from(cont.children).map(el => el.tagName + "(display=" + getComputedStyle(el).display + ",w=" + el.clientWidth + ",h=" + el.clientHeight + ")");
+          const c = cont.querySelector("canvas");
+          let pxInfo = "no-canvas";
+          if (c && c.width > 0 && c.height > 0) {
             try {
-              const imgData = ctx.getImageData(0, 0, Math.min(10, c.width), 1).data;
-              console.log("[CANVAS-PROBE] size=" + c.width + "x" + c.height + " first_px RGBA=(" + imgData[0] + "," + imgData[1] + "," + imgData[2] + "," + imgData[3] + ")");
-            } catch(e) {}
+              const ctx = c.getContext("2d");
+              const px = ctx.getImageData(10, 10, 1, 1).data;
+              pxInfo = "c_size=" + c.width + "x" + c.height + " px(10,10)=rgba(" + px[0] + "," + px[1] + "," + px[2] + "," + px[3] + ")";
+            } catch(e) { pxInfo = "err=" + e.message; }
           }
+          console.log("[SCREEN-CHILDREN]", children.join(" | "), "|", pxInfo);
         }
-      }, 3000);
+      }, 4000);
     });
 
     // Emulator errors
