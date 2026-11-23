@@ -141,11 +141,13 @@ async function startNeuroVM() {
           if (c && c.width > 0 && c.height > 0) {
             try {
               const ctx = c.getContext("2d");
-              const px = ctx.getImageData(10, 10, 1, 1).data;
-              pxInfo = "c_size=" + c.width + "x" + c.height + " px(10,10)=rgba(" + px[0] + "," + px[1] + "," + px[2] + "," + px[3] + ")";
+              const p_top = ctx.getImageData(10, 10, 1, 1).data;
+              const p_mid = ctx.getImageData(Math.floor(c.width/2), Math.floor(c.height/2), 1, 1).data;
+              const p_bot = ctx.getImageData(Math.floor(c.width/2), c.height - 20, 1, 1).data;
+              pxInfo = "top=" + p_top[0] + "," + p_top[1] + "," + p_top[2] + " | mid=" + p_mid[0] + "," + p_mid[1] + "," + p_mid[2] + " | bot=" + p_bot[0] + "," + p_bot[1] + "," + p_bot[2];
             } catch(e) { pxInfo = "err=" + e.message; }
           }
-          console.log("[SCREEN-CHILDREN]", children.join(" | "), "|", pxInfo);
+          console.log("[PIXEL-PROBE]", pxInfo);
         }
       }, 4000);
     });
