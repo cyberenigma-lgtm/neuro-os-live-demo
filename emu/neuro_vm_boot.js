@@ -89,8 +89,6 @@ async function startNeuroVM() {
 
     const isoBuffer = await fetchIsoWithProgress("Neuro-OS-Live-Demo.iso");
 
-    // v64 API (same as basic.html official example):
-    // screen_container needs pre-existing <div> + <canvas> children in HTML
     emulatorInstance = new V86({
       wasm_path:             "emu/v86.wasm",
       graphics_adapter:      "bochs_vga",
@@ -101,11 +99,45 @@ async function startNeuroVM() {
       bios:     { url: "emu/seabios.bin" },
       vga_bios: { url: "emu/vgabios.bin" },
       cdrom:    { buffer: isoBuffer },
-      // Disable network card (avoids 404 for v86-ne2k.js plugin)
-      net_device:     { type: "none" },
-      // Disable speaker (avoids AudioContext user-gesture restriction)
+      net_device:      { type: "none" },
       disable_speaker: true,
       autostart: true,
+    });
+
+    // ── Diagnostic event listeners ──────────────────────────────
+    // COM1 serial output (NEURO-OS writes panics + debug here)
+    const serialLog = document.getElementById("serial-log");
+    let serialBuf = "";
+    emulatorInstance.add_listener("serial0-output-byte", function(byte) {
+      const ch = String.fromCharCode(byte);
+      serialBuf += ch;
+      if (ch === "\n" || serialBuf.length > 200) {
+        if (serialLog) {
+          serialLog.textContent += serialBuf;
+          serialLog.scrollTop = serialLog.scrollHeight;
+        }
+        console.log("[COM1]", serialBuf.replace(/\n/g,""));
+        serialBuf = "";
+      }
+    });
+
+    // Screen mode changes — tells us if the VBE framebuffer was activated
+    emulatorInstance.add_listener("screen-set-size", function(w, h, bpp) {
+      const msg = "Screen mode: " + w + "×" + h + " " + bpp + "bpp";
+      setProgress(100, msg);
+      console.log("[VBE]", msg);
+      if (serialLog) serialLog.textContent += "\n[VBE] " + msg + "\n";
+    });
+
+    // Emulator errors
+    emulatorInstance.add_listener("emulator-error", function(err) {
+      console.error("[EMU ERROR]", err);
+      setProgress(100, "Emulator error: " + err.message);
+      if (serialLog) serialLog.textContent += "\n[ERROR] " + err.message + "\n";
+    });
+
+    emulatorInstance.add_listener("emulator-started", function() {
+      console.log("[EMU] Started OK");
     });
 
     setProgress(100, "NEURO-OS Live Demo Running [512 MB RAM | VBE Linear Framebuffer | x86_64]");
