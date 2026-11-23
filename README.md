@@ -1,5 +1,11 @@
 # 🧠 NEURO-OS Genesis — Pre-Alpha Live Demo (`x86_64` Bare-Metal)
 
+### 🚀 [▶ CLIC AQUÍ PARA PROBAR LA DEMO EN VIVO / CLICK HERE TO PLAY LIVE DEMO](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Play%20in%20Browser-00e5ff?style=for-the-badge&logo=googlechrome&logoColor=white)](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)
+[![Architecture](https://img.shields.io/badge/Architecture-x86__64%20Bare--Metal-00ff88?style=for-the-badge)](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)
+[![Status](https://img.shields.io/badge/Status-Pre--Alpha%20Active%20Dev-ffaa00?style=for-the-badge)](https://github.com/cyberenigma-lgtm/neuro-os-live-demo/issues)
+
 [🇬🇧 English](#english) | [🇪🇸 Español](#español)
 
 ---
@@ -27,7 +33,7 @@ This project is far from a finished product. Current work focuses on:
 
 ### 🤝 Want to help or test it?
 This is an independent project in active evolution. If you are passionate about OS development, binary loaders (`ELF`/`PE`), device drivers, or graphics engines and want to share feedback, report bugs, or collaborate:
-- **Try the live browser demo** directly via the GitHub Pages link in this repository.
+- **Try the live browser demo** directly via [https://cyberenigma-lgtm.github.io/neuro-os-live-demo/](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/).
 - **Open an Issue** with your feedback, ideas, or collaboration proposals.
 
 *All rights reserved — Architecture & development by **JMMC**.*
@@ -57,7 +63,7 @@ El sistema está lejos de ser un producto terminado; actualmente estamos trabaja
 
 ### 🤝 ¿Quieres colaborar o probarlo?
 Este es un proyecto independiente en plena evolución. Si te apasiona el desarrollo de sistemas operativos, cargadores binarios (`ELF`/`PE`), drivers o motores gráficos y te gustaría aportar ideas, reportar fallos o colaborar en el desarrollo:
-- **Prueba la demo en vivo** directamente desde el enlace de GitHub Pages de este repositorio.
+- **Prueba la demo en vivo** directamente desde [https://cyberenigma-lgtm.github.io/neuro-os-live-demo/](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/).
 - **Abre un Issue** en este repositorio con tus comentarios, ideas o propuestas de colaboración.
 
 *Todos los derechos reservados — Arquitectura y desarrollo por **JMMC**.*
