@@ -101,6 +101,10 @@ async function startNeuroVM() {
       bios:     { url: "emu/seabios.bin" },
       vga_bios: { url: "emu/vgabios.bin" },
       cdrom:    { buffer: isoBuffer },
+      // Disable network card (avoids 404 for v86-ne2k.js plugin)
+      net_device:     { type: "none" },
+      // Disable speaker (avoids AudioContext user-gesture restriction)
+      disable_speaker: true,
       autostart: true,
     });
 
