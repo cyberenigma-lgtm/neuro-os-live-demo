@@ -130,6 +130,14 @@ async function startNeuroVM() {
       setProgress(100, msg);
       console.log("[VBE]", msg);
       if (serialLog) serialLog.textContent += "\n[VBE] " + msg + "\n";
+
+      // If graphical mode, hide text div and show canvas
+      if (bpp > 0 || w >= 640) {
+        const textDiv = document.querySelector("#screen_container > div");
+        const canvas = document.querySelector("#screen_container > canvas");
+        if (textDiv) textDiv.style.display = "none";
+        if (canvas) canvas.style.display = "block";
+      }
     });
 
     // Emulator errors
