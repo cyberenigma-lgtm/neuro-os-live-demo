@@ -316,7 +316,7 @@
           <span class="status-dot"></span>
           <span>NEURO-OS Live — WebAssembly x86_64 Interactive Emulation (v64)</span>
         </div>
-        <span>512 MB RAM | VBE Linear Framebuffer | Bare-Metal ISO</span>
+        <span>1024 MB RAM | VBE Linear Framebuffer | Bare-Metal ISO</span>
       </div>
       <!-- v64 screen: needs pre-existing text div + canvas (browser/screen.js contract) -->
       <div id="vm-viewport">
@@ -335,7 +335,7 @@
         Run the stripped ISO with hardware acceleration on your machine:
       </p>
       <div class="cli-box">
-        <code id="qemu-cmd">qemu-system-x86_64 -cdrom Neuro-OS-Live-Demo.iso -m 512M -vga std</code>
+        <code id="qemu-cmd">qemu-system-x86_64 -cdrom Neuro-OS-Live-Demo.iso -m 1024M -vga std</code>
         <button class="copy-btn"
           onclick="navigator.clipboard.writeText(document.getElementById('qemu-cmd').innerText);this.innerText='COPIED!';setTimeout(()=>this.innerText='COPY',2000);">COPY</button>
       </div>
@@ -379,7 +379,7 @@
   </footer>
 
   <!-- Load v64 (64-bit x86 emulator) as ES module, then boot -->
-  <script type="module" src="emu/neuro_vm_boot.js?v=7"></script>
+  <script type="module" src="emu/neuro_vm_boot.js?v=9"></script>
 
 </body>
 </html>

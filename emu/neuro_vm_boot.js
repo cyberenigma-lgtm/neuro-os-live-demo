@@ -92,10 +92,10 @@ async function startNeuroVM() {
     emulatorInstance = new V86({
       wasm_path:             "emu/v86.wasm",
       graphics_adapter:      "bochs_vga",
-      graphics_adapter_path: "emu/v86-bochs-vga.js",
+      graphics_adapter_path: "emu/v86-bochs-vga.js?v=9",
       screen_container:      document.getElementById("screen_container"),
-      memory_size:    512 * 1024 * 1024,
-      vram_size:       16 * 1024 * 1024,
+      memory_size:    1024 * 1024 * 1024,
+      vram_size:        16 * 1024 * 1024,
       bios:     { url: "emu/seabios.bin" },
       vga_bios: { url: "emu/vgabios.bin" },
       cdrom:    { buffer: isoBuffer },
@@ -151,7 +151,7 @@ async function startNeuroVM() {
       console.log("[EMU] Started OK");
     });
 
-    setProgress(100, "NEURO-OS Live Demo Running [512 MB RAM | VBE Linear Framebuffer | x86_64]");
+    setProgress(100, "NEURO-OS Live Demo Running [1024 MB RAM | VBE Linear Framebuffer | x86_64]");
 
   } catch (err) {
     setProgress(100, "Notice: " + err.message + " (Run via HTTP server or GitHub Pages to stream ISO)");
