@@ -104,6 +104,16 @@ async function startNeuroVM() {
       autostart: true,
     });
 
+    // Handle mouse capture on click
+    const screenCont = document.getElementById("screen_container");
+    if (screenCont) {
+      screenCont.addEventListener("click", () => {
+        if (emulatorInstance && typeof emulatorInstance.lock_mouse === "function") {
+          emulatorInstance.lock_mouse();
+        }
+      });
+    }
+
     // ── Diagnostic event listeners ──────────────────────────────
     // COM1 serial output (NEURO-OS writes panics + debug here)
     const serialLog = document.getElementById("serial-log");
