@@ -201,9 +201,9 @@
       font-size: 14px;
       white-space: pre;
     }
-    #screen_container { width: 100%; min-height: 520px; display: block; background: #000; }
-    #screen_container canvas { display: block; width: 100% !important; height: auto !important; }
-    #screen_container > div:first-child { color: #ccc; padding: 4px; }
+    #screen_container { width: 100%; min-height: 520px; display: flex; align-items: center; justify-content: center; background: #000; }
+    #screen_container canvas { width: 100% !important; height: auto !important; max-height: 600px; object-fit: contain; }
+    #screen_container > div:first-child { color: #ccc; font-family: 'Consolas', monospace; padding: 8px; }
 
     /* ── Quick-boot box ── */
     .quick-boot-box {

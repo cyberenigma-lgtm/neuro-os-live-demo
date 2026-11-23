@@ -121,12 +121,29 @@ async function startNeuroVM() {
       }
     });
 
-    // Screen mode changes — tells us if the VBE framebuffer was activated
-    emulatorInstance.add_listener("screen-set-size", function(w, h, bpp) {
-      const msg = "Screen mode: " + w + "×" + h + " " + bpp + "bpp";
+    // Screen mode changes — v64 passes [w, h, bpp] as array in first arg
+    emulatorInstance.add_listener("screen-set-size", function(data) {
+      const w   = Array.isArray(data) ? data[0] : data;
+      const h   = Array.isArray(data) ? data[1] : arguments[1];
+      const bpp = Array.isArray(data) ? data[2] : arguments[2];
+      const msg = "Screen mode: " + w + "×" + h + " " + bpp + "bpp — VBE active ✅";
       setProgress(100, msg);
       console.log("[VBE]", msg);
       if (serialLog) serialLog.textContent += "\n[VBE] " + msg + "\n";
+
+      // Check canvas status periodically
+      setInterval(() => {
+        const c = document.querySelector("#screen_container canvas");
+        if (c && c.width > 0 && c.height > 0) {
+          const ctx = c.getContext("2d");
+          if (ctx) {
+            try {
+              const imgData = ctx.getImageData(0, 0, Math.min(10, c.width), 1).data;
+              console.log("[CANVAS-PROBE] size=" + c.width + "x" + c.height + " first_px RGBA=(" + imgData[0] + "," + imgData[1] + "," + imgData[2] + "," + imgData[3] + ")");
+            } catch(e) {}
+          }
+        }
+      }, 3000);
     });
 
     // Emulator errors
