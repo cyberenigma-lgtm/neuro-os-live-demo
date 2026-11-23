@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEURO-OS GENESIS (x86_64) — Pre-Alpha Live Browser Demo</title>
+  <style>
+    :root {
+      --bg-dark: #050914;
+      --bg-panel: #0a1426;
+      --bg-card: #0e1d36;
+      --cyan: #00e5ff;
+      --green: #00ff88;
+      --amber: #ffaa00;
+      --magenta: #ff00aa;
+      --text-main: #e8f4ff;
+      --text-dim: #88aacc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at 50% 0%, #0d2142 0%, var(--bg-dark) 70%);
+      color: var(--text-main);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: rgba(6, 14, 26, 0.92);
+      border-bottom: 1px solid rgba(0, 229, 255, 0.35);
+      padding: 12px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      backdrop-filter: blur(8px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand h1 {
+      font-size: 1.15rem;
+      letter-spacing: 0.06em;
+      color: var(--cyan);
+      text-shadow: 0 0 10px rgba(0, 229, 255, 0.45);
+    }
+    .badge-prealpha {
+      background: rgba(255, 170, 0, 0.16);
+      border: 1px solid var(--amber);
+      color: var(--amber);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-arch {
+      background: rgba(0, 255, 136, 0.14);
+      border: 1px solid var(--green);
+      color: var(--green);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid rgba(0, 229, 255, 0.45);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover {
+      background: rgba(0, 229, 255, 0.18);
+      border-color: var(--green);
+      color: var(--green);
+      box-shadow: 0 0 12px rgba(0, 255, 136, 0.25);
+    }
+    .btn-primary {
+      background: rgba(0, 255, 136, 0.16);
+      border-color: var(--green);
+      color: var(--green);
+    }
+    .notice-bar {
+      background: rgba(255, 170, 0, 0.09);
+      border-bottom: 1px solid rgba(255, 170, 0, 0.3);
+      color: #ffd988;
+      padding: 8px 24px;
+      font-size: 0.83rem;
+      text-align: center;
+    }
+    .notice-bar a {
+      color: var(--cyan);
+      font-weight: 600;
+    }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      gap: 14px;
+    }
+    .status-panel {
+      width: 100%;
+      max-width: 1024px;
+      background: var(--bg-panel);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .status-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.84rem;
+      color: var(--text-dim);
+    }
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: #050c18;
+      border: 1px solid rgba(0, 229, 255, 0.35);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--cyan), var(--green));
+      transition: width 0.2s ease;
+    }
+    #vm-viewport {
+      width: 1024px;
+      max-width: 100%;
+      min-height: 600px;
+      background: #02050c;
+      border: 2px solid var(--cyan);
+      border-radius: 10px;
+      box-shadow: 0 0 32px rgba(0, 229, 255, 0.2);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #screen_container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #screen_container canvas {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    .specs-grid {
+      width: 100%;
+      max-width: 1024px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+    .spec-card {
+      background: var(--bg-panel);
+      border: 1px solid rgba(0, 229, 255, 0.25);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.8rem;
+    }
+    .spec-card strong {
+      color: var(--cyan);
+      display: block;
+      margin-bottom: 3px;
+    }
+    footer {
+      text-align: center;
+      padding: 12px;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      border-top: 1px solid rgba(0, 229, 255, 0.15);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>👑 NEURO-OS GENESIS</h1>
+      <span class="badge-prealpha">Pre-Alpha Early Demo Build</span>
+      <span class="badge-arch">x86_64 Bare-Metal (~519 KB Kernel)</span>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-primary" id="btn-reboot">⟳ Reboot VM</button>
+      <button class="btn" id="btn-fullscreen">⛶ Fullscreen</button>
+      <a class="btn" href="Neuro-OS-Live-Demo.iso" download>⬇ Download ISO (14.6 MB)</a>
+      <a class="btn" href="https://github.com/cyberenigma-lgtm/neuro-os-live-demo/issues" target="_blank" rel="noopener">🐞 GitHub &amp; Issues</a>
+    </div>
+  </header>
+
+  <div class="notice-bar">
+    ⚠️ <strong>Pre-Alpha / Active Development:</strong> NEURO-OS is an independent bare-metal operating system built from scratch. This live demo runs the real bootable ISO in your browser via WebAssembly virtualization (`512 MB RAM`, `VBE Linear Framebuffer`). Found a bug or want to contribute? <a href="https://github.com/cyberenigma-lgtm/neuro-os-live-demo/issues" target="_blank" rel="noopener">Open an Issue on GitHub</a>.
+  </div>
+
+  <main>
+    <div class="status-panel">
+      <div class="status-top">
+        <span id="status-text">Initializing WebAssembly x86_64 Emulator &amp; Fetching Neuro-OS-Live-Demo.iso...</span>
+        <span id="status-pct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <div id="vm-viewport">
+      <div id="screen_container">
+        <div id="text_screen" style="white-space: pre; font: 14px monospace; line-height: 14px; color: #00ff88;"></div>
+        <canvas style="display: none"></canvas>
+      </div>
+    </div>
+
+    <div class="specs-grid">
+      <div class="spec-card">
+        <strong>Kernel Footprint</strong>
+        519 KB stripped ELF64 (`kernel_x64.elf`), Ring-0 Long Mode + Per-Process `CR3` Page Tables
+      </div>
+      <div class="spec-card">
+        <strong>Graphics Engine</strong>
+        Quartz-Compiz 2D/3D Hybrid Compositor, Multi-Window Dragging &amp; VBE Linear Framebuffer
+      </div>
+      <div class="spec-card">
+        <strong>Ring-3 Sandboxes</strong>
+        Native Linux ELF64 (`CPL=3` `UID=1000`), POSIX `RAMFS`, Win64 PE64 &amp; Multi-ABI Engine
+      </div>
+      <div class="spec-card">
+        <strong>Closed-Source Core</strong>
+        Public binary ISO showcase. Report feedback, bugs, or ideas via GitHub Issues.
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    NEURO-OS Genesis &copy; 2026 — Pre-Alpha Live Browser Showcase | Powered by WebAssembly x86 Virtualization
+  </footer>
+
+  <script src="emu/libx86.js"></script>
+  <script src="emu/neuro_vm_boot.js"></script>
+</body>
+</html>
