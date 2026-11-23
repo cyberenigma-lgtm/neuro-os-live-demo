@@ -1,4 +1,4 @@
-name: Deploy NEURO-OS Live Web Demo to GitHub Pages
+name: Deploy NEURO-OS Live Demo to GitHub Pages
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
@@ -35,4 +35,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-

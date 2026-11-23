@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NEURO-OS GENESIS (x86_64) — Pre-Alpha Official Live Showcase</title>
+  <title>NEURO-OS GENESIS (x86_64) — Interactive Live Demo</title>
+  <!-- Required for SharedArrayBuffer on GitHub Pages (COOP/COEP headers via service worker) -->
   <script src="coi-serviceworker.js"></script>
   <style>
     :root {
@@ -13,7 +14,6 @@
       --cyan: #00e5ff;
       --green: #00ff88;
       --amber: #ffaa00;
-      --magenta: #ff00aa;
       --text-main: #e8f4ff;
       --text-dim: #8faec9;
     }
@@ -27,8 +27,8 @@
       flex-direction: column;
     }
     header {
-      background: rgba(6, 14, 26, 0.95);
-      border-bottom: 1px solid rgba(0, 229, 255, 0.35);
+      background: rgba(6,14,26,0.95);
+      border-bottom: 1px solid rgba(0,229,255,0.35);
       padding: 14px 24px;
       display: flex;
       flex-wrap: wrap;
@@ -37,19 +37,15 @@
       gap: 12px;
       backdrop-filter: blur(8px);
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .brand { display: flex; align-items: center; gap: 12px; }
     .brand h1 {
       font-size: 1.25rem;
       letter-spacing: 0.06em;
       color: var(--cyan);
-      text-shadow: 0 0 12px rgba(0, 229, 255, 0.45);
+      text-shadow: 0 0 12px rgba(0,229,255,0.45);
     }
     .badge-prealpha {
-      background: rgba(255, 170, 0, 0.16);
+      background: rgba(255,170,0,0.16);
       border: 1px solid var(--amber);
       color: var(--amber);
       font-size: 0.75rem;
@@ -60,7 +56,7 @@
       letter-spacing: 0.05em;
     }
     .badge-arch {
-      background: rgba(0, 255, 136, 0.14);
+      background: rgba(0,255,136,0.14);
       border: 1px solid var(--green);
       color: var(--green);
       font-size: 0.75rem;
@@ -68,16 +64,11 @@
       padding: 4px 10px;
       border-radius: 999px;
     }
-    .toolbar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .btn {
       background: var(--bg-card);
       color: var(--text-main);
-      border: 1px solid rgba(0, 229, 255, 0.45);
+      border: 1px solid rgba(0,229,255,0.45);
       padding: 9px 16px;
       border-radius: 6px;
       font-size: 0.88rem;
@@ -90,27 +81,22 @@
       gap: 8px;
     }
     .btn:hover {
-      background: rgba(0, 229, 255, 0.2);
+      background: rgba(0,229,255,0.2);
       border-color: var(--green);
       color: var(--green);
-      box-shadow: 0 0 14px rgba(0, 255, 136, 0.25);
     }
     .btn-primary {
-      background: rgba(0, 255, 136, 0.18);
+      background: rgba(0,255,136,0.18);
       border-color: var(--green);
       color: var(--green);
     }
     .notice-bar {
-      background: rgba(255, 170, 0, 0.09);
-      border-bottom: 1px solid rgba(255, 170, 0, 0.25);
+      background: rgba(255,170,0,0.09);
+      border-bottom: 1px solid rgba(255,170,0,0.25);
       color: #ffd988;
       padding: 9px 24px;
       font-size: 0.85rem;
       text-align: center;
-    }
-    .notice-bar a {
-      color: var(--cyan);
-      font-weight: 600;
     }
     main {
       flex: 1;
@@ -123,12 +109,46 @@
       margin: 0 auto;
       width: 100%;
     }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      width: 100%;
+      background: rgba(0,229,255,0.08);
+      border: 1px solid rgba(0,229,255,0.3);
+      border-radius: 6px;
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--cyan);
+    }
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(0,229,255,0.12);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    #progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--cyan), var(--green));
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* ── VM Viewport ── */
     .showcase-container {
       width: 100%;
       background: #02050c;
       border: 2px solid var(--cyan);
       border-radius: 12px;
-      box-shadow: 0 0 36px rgba(0, 229, 255, 0.22);
+      box-shadow: 0 0 36px rgba(0,229,255,0.22);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -139,48 +159,54 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(0, 229, 255, 0.3);
+      border-bottom: 1px solid rgba(0,229,255,0.3);
       font-size: 0.85rem;
       color: var(--text-dim);
-    }
-    .viewport-header .status-indicator {
-      display: flex;
-      align-items: center;
+      flex-wrap: wrap;
       gap: 8px;
-      color: var(--green);
-      font-weight: 600;
     }
+    .status-indicator { display: flex; align-items: center; gap: 8px; color: var(--green); font-weight: 600; }
     .status-dot {
-      width: 10px;
-      height: 10px;
+      width: 10px; height: 10px;
       border-radius: 50%;
       background: var(--green);
       box-shadow: 0 0 8px var(--green);
       animation: pulse 2s infinite;
     }
-    @keyframes pulse {
-      0% { opacity: 0.4; }
-      50% { opacity: 1; }
-      100% { opacity: 0.4; }
-    }
-    .viewport-media {
-      position: relative;
-      background: #000;
+    @keyframes pulse { 0%,100% { opacity:.4; } 50% { opacity:1; } }
+
+    /* v64 / v86 injects its own canvas into screen_container */
+    #vm-viewport {
       width: 100%;
+      min-height: 520px;
+      background: #000;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 520px;
+      position: relative;
     }
-    .viewport-media img {
-      width: 100%;
-      height: auto;
+    /* Style the canvas v64 injects */
+    #vm-viewport canvas {
       display: block;
+      width: 100% !important;
+      height: auto !important;
+      max-height: 600px;
       object-fit: contain;
+      cursor: default;
     }
+    /* Text-mode fallback that v64 also injects */
+    #vm-viewport div {
+      color: #00ff88;
+      font-family: 'Consolas', monospace;
+      font-size: 14px;
+      white-space: pre;
+    }
+    #screen_container { width: 100%; min-height: 520px; display: flex; align-items: center; justify-content: center; }
+
+    /* ── Quick-boot box ── */
     .quick-boot-box {
       background: var(--bg-panel);
-      border: 1px solid rgba(0, 229, 255, 0.35);
+      border: 1px solid rgba(0,229,255,0.35);
       border-radius: 8px;
       padding: 16px 20px;
       width: 100%;
@@ -188,20 +214,13 @@
       flex-direction: column;
       gap: 10px;
     }
-    .quick-boot-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--green);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .quick-boot-title { font-size: .95rem; font-weight: 700; color: var(--green); display: flex; align-items: center; gap: 8px; }
     .cli-box {
       background: #020712;
-      border: 1px solid rgba(0, 229, 255, 0.25);
+      border: 1px solid rgba(0,229,255,0.25);
       border-radius: 6px;
       padding: 12px 16px;
-      font-family: 'Consolas', 'Courier New', monospace;
+      font-family: 'Consolas', monospace;
       font-size: 0.92rem;
       color: #00e5ff;
       display: flex;
@@ -211,21 +230,19 @@
       overflow-x: auto;
     }
     .copy-btn {
-      background: rgba(0, 229, 255, 0.15);
+      background: rgba(0,229,255,0.15);
       border: 1px solid var(--cyan);
       color: var(--cyan);
       padding: 4px 10px;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 0.78rem;
+      font-size: .78rem;
       font-weight: 600;
-      transition: all 0.2s ease;
       white-space: nowrap;
     }
-    .copy-btn:hover {
-      background: var(--cyan);
-      color: #020712;
-    }
+    .copy-btn:hover { background: var(--cyan); color: #020712; }
+
+    /* ── Spec cards ── */
     .specs-grid {
       width: 100%;
       display: grid;
@@ -234,43 +251,38 @@
     }
     .spec-card {
       background: var(--bg-panel);
-      border: 1px solid rgba(0, 229, 255, 0.25);
+      border: 1px solid rgba(0,229,255,0.25);
       border-radius: 8px;
       padding: 14px 16px;
-      font-size: 0.85rem;
+      font-size: .85rem;
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
-    .spec-card strong {
-      color: var(--cyan);
-      font-size: 0.92rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .spec-card p {
-      color: var(--text-dim);
-      line-height: 1.5;
-    }
+    .spec-card strong { color: var(--cyan); font-size: .92rem; display: flex; align-items: center; gap: 6px; }
+    .spec-card p { color: var(--text-dim); line-height: 1.5; }
+
     footer {
       text-align: center;
       padding: 18px;
-      font-size: 0.82rem;
+      font-size: .82rem;
       color: var(--text-dim);
-      border-top: 1px solid rgba(0, 229, 255, 0.15);
-      background: rgba(6, 14, 26, 0.8);
+      border-top: 1px solid rgba(0,229,255,0.15);
+      background: rgba(6,14,26,0.8);
     }
   </style>
 </head>
 <body>
+
   <header>
     <div class="brand">
       <h1>👑 NEURO-OS GENESIS</h1>
-      <span class="badge-prealpha">Pre-Alpha Live Build</span>
+      <span class="badge-prealpha">PRE-ALPHA LIVE BUILD</span>
       <span class="badge-arch">x86_64 Bare-Metal (~515 KB Kernel)</span>
     </div>
     <div class="toolbar">
+      <button class="btn" id="btn-reboot">🔄 Reboot VM</button>
+      <button class="btn" id="btn-fullscreen">⛶ Fullscreen</button>
       <a class="btn btn-primary" href="Neuro-OS-Live-Demo.iso" download>⬇ Download ISO (14.6 MB)</a>
       <a class="btn" href="https://github.com/cyberenigma-lgtm/neuro-os-live-demo/issues" target="_blank" rel="noopener">🐞 Report Issues</a>
       <a class="btn" href="https://github.com/cyberenigma-lgtm/neuro-os-live-demo" target="_blank" rel="noopener">⭐ GitHub Repo</a>
@@ -282,40 +294,54 @@
   </div>
 
   <main>
+
+    <!-- Progress bar -->
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="status-text">Initialising WebAssembly x86_64 emulator…</span>
+        <span id="status-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div id="progress-fill"></div></div>
+    </div>
+
+    <!-- Interactive VM viewport -->
     <div class="showcase-container">
       <div class="viewport-header">
         <div class="status-indicator">
           <span class="status-dot"></span>
-          <span>Authentic Bare-Metal Execution Proof (QEMU KVM x86_64)</span>
+          <span>NEURO-OS Live — WebAssembly x86_64 Interactive Emulation (v64)</span>
         </div>
-        <span>Video Mode: 1280x720x32 Linear VBE | RAM: 512 MB</span>
+        <span>512 MB RAM | VBE Linear Framebuffer | Bare-Metal ISO</span>
       </div>
-      <div class="viewport-media">
-        <img src="neuro_qemu_showcase.png" alt="NEURO-OS Genesis x86_64 Boot &amp; Compositor Window Manager with Lutris GUI" />
+      <!-- v64 injects <canvas> + text screen <div> here automatically -->
+      <div id="vm-viewport">
+        <div id="screen_container"></div>
       </div>
     </div>
 
+    <!-- Native QEMU command -->
     <div class="quick-boot-box">
-      <div class="quick-boot-title">
-        ⚡ <span>How to Run the Real 64-Bit Bootable ISO in 1 Second (QEMU / Native)</span>
-      </div>
-      <p style="color: var(--text-dim); font-size: 0.86rem; line-height: 1.5;">
-        Because NEURO-OS runs directly in <strong>x86_64 Long Mode</strong> with per-process <code>CR3</code> paging and hardware isolation, run the stripped ISO image directly with hardware acceleration on your machine:
+      <div class="quick-boot-title">⚡ <span>Run the Real 64-Bit ISO Natively (QEMU / KVM)</span></div>
+      <p style="color:var(--text-dim);font-size:.86rem;line-height:1.5;">
+        NEURO-OS runs directly in <strong>x86_64 Long Mode</strong> with per-process <code>CR3</code> paging and hardware isolation.
+        Run the stripped ISO with hardware acceleration on your machine:
       </p>
       <div class="cli-box">
         <code id="qemu-cmd">qemu-system-x86_64 -cdrom Neuro-OS-Live-Demo.iso -m 512M -vga std</code>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('qemu-cmd').innerText); this.innerText='COPIED!'; setTimeout(()=>this.innerText='COPY', 2000);">COPY</button>
+        <button class="copy-btn"
+          onclick="navigator.clipboard.writeText(document.getElementById('qemu-cmd').innerText);this.innerText='COPIED!';setTimeout(()=>this.innerText='COPY',2000);">COPY</button>
       </div>
     </div>
 
+    <!-- Spec cards -->
     <div class="specs-grid">
       <div class="spec-card">
         <strong>👑 Sovereign Ring-0 Kernel</strong>
-        <p>Ultra-compact ~515 KB stripped ELF64 kernel (<code>kernel_x64.elf</code>). Boots bare-metal with Multiboot1/2, GDT64, IDT64, and isolated per-process <code>CR3</code> PML4 page tables.</p>
+        <p>Ultra-compact ~515 KB stripped ELF64 (<code>kernel_x64.elf</code>). Boots bare-metal with Multiboot1/2, GDT64, IDT64, and isolated per-process <code>CR3</code> PML4 page tables.</p>
       </div>
       <div class="spec-card">
         <strong>🛡️ Ring-3 Privilege Separation</strong>
-        <p>Enforces strict unprivileged user mode (<code>CPL=3</code>, <code>UID=1000</code>). Kernel critical paths (<code>/boot</code>, <code>/kernel</code>) reject writes with <code>-EACCES</code>. Root escalation blocked with <code>-EPERM</code>.</p>
+        <p>Enforces strict unprivileged user mode (<code>CPL=3</code>, <code>UID=1000</code>). Kernel critical paths reject writes with <code>-EACCES</code>. Root escalation blocked with <code>-EPERM</code>.</p>
       </div>
       <div class="spec-card">
         <strong>🎨 Quartz-Compiz Compositor</strong>
@@ -326,10 +352,15 @@
         <p>Direct userspace binary execution without full guest VMs: Linux ELF64 POSIX layer, Win64 PE64 capsule loader, in-memory RAMFS, and native logical dispatch.</p>
       </div>
     </div>
+
   </main>
 
   <footer>
     NEURO-OS Genesis &copy; 2026 — Architecture &amp; Development by <strong>JMMC</strong>. All rights reserved. | Proprietary Kernel Showcase
   </footer>
+
+  <!-- Load v64 (64-bit x86 emulator) as ES module, then boot -->
+  <script type="module" src="emu/neuro_vm_boot.js"></script>
+
 </body>
 </html>
