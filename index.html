@@ -201,7 +201,9 @@
       font-size: 14px;
       white-space: pre;
     }
-    #screen_container { width: 100%; min-height: 520px; display: flex; align-items: center; justify-content: center; }
+    #screen_container { width: 100%; min-height: 520px; display: block; background: #000; }
+    #screen_container canvas { display: block; width: 100% !important; height: auto !important; }
+    #screen_container > div:first-child { color: #ccc; padding: 4px; }
 
     /* ── Quick-boot box ── */
     .quick-boot-box {
@@ -313,9 +315,12 @@
         </div>
         <span>512 MB RAM | VBE Linear Framebuffer | Bare-Metal ISO</span>
       </div>
-      <!-- v64 injects <canvas> + text screen <div> here automatically -->
+      <!-- v64 screen: needs pre-existing text div + canvas (browser/screen.js contract) -->
       <div id="vm-viewport">
-        <div id="screen_container"></div>
+        <div id="screen_container">
+          <div style="white-space: pre; font: 14px monospace; line-height: 14px; color: #ccc;"></div>
+          <canvas style="display: none;"></canvas>
+        </div>
       </div>
     </div>
 

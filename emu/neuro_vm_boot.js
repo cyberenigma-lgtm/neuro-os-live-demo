@@ -89,18 +89,15 @@ async function startNeuroVM() {
 
     const isoBuffer = await fetchIsoWithProgress("Neuro-OS-Live-Demo.iso");
 
-    // v64 API — graphics_adapter is REQUIRED, screen_container → screen.container
+    // v64 API (same as basic.html official example):
+    // screen_container needs pre-existing <div> + <canvas> children in HTML
     emulatorInstance = new V86({
-      wasm_path:            "emu/v86.wasm",
-      // VGA graphics plugin (bochs_vga = standard VBE, what NEURO-OS uses)
-      graphics_adapter:     "bochs_vga",
-      graphics_adapter_path:"emu/v86-bochs-vga.js",
-      // Screen output: v64 injects canvas inside this element
-      screen: {
-        container: document.getElementById("screen_container"),
-      },
-      memory_size:   512 * 1024 * 1024,
-      vram_size:      16 * 1024 * 1024,   // was vga_memory_size in old v86
+      wasm_path:             "emu/v86.wasm",
+      graphics_adapter:      "bochs_vga",
+      graphics_adapter_path: "emu/v86-bochs-vga.js",
+      screen_container:      document.getElementById("screen_container"),
+      memory_size:    512 * 1024 * 1024,
+      vram_size:       16 * 1024 * 1024,
       bios:     { url: "emu/seabios.bin" },
       vga_bios: { url: "emu/vgabios.bin" },
       cdrom:    { buffer: isoBuffer },
