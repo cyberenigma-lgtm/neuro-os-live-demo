@@ -130,26 +130,6 @@ async function startNeuroVM() {
       setProgress(100, msg);
       console.log("[VBE]", msg);
       if (serialLog) serialLog.textContent += "\n[VBE] " + msg + "\n";
-
-      // Check canvas and screen container children status
-      setInterval(() => {
-        const cont = document.getElementById("screen_container");
-        if (cont) {
-          const children = Array.from(cont.children).map(el => el.tagName + "(display=" + getComputedStyle(el).display + ",w=" + el.clientWidth + ",h=" + el.clientHeight + ")");
-          const c = cont.querySelector("canvas");
-          let pxInfo = "no-canvas";
-          if (c && c.width > 0 && c.height > 0) {
-            try {
-              const ctx = c.getContext("2d");
-              const p_top = ctx.getImageData(10, 10, 1, 1).data;
-              const p_mid = ctx.getImageData(Math.floor(c.width/2), Math.floor(c.height/2), 1, 1).data;
-              const p_bot = ctx.getImageData(Math.floor(c.width/2), c.height - 20, 1, 1).data;
-              pxInfo = "top=" + p_top[0] + "," + p_top[1] + "," + p_top[2] + " | mid=" + p_mid[0] + "," + p_mid[1] + "," + p_mid[2] + " | bot=" + p_bot[0] + "," + p_bot[1] + "," + p_bot[2];
-            } catch(e) { pxInfo = "err=" + e.message; }
-          }
-          console.log("[PIXEL-PROBE]", pxInfo);
-        }
-      }, 4000);
     });
 
     // Emulator errors
