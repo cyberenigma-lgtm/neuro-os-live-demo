@@ -1,42 +1,21 @@
 # 🧠 NEURO-OS Genesis — Pre-Alpha Live Demo (`x86_64` Bare-Metal)
 
-### 🚀 [▶ CLIC AQUÍ PARA PROBAR LA DEMO EN VIVO / CLICK HERE TO PLAY LIVE DEMO](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)
+<div align="center">
+
+[![NEURO-OS Genesis Live Interactive Demo](docs/live_demo_showcase.png)](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)
+
+### 🚀 [▶ HAZ CLIC AQUÍ PARA PROBAR LA DEMO EN VIVO / CLICK HERE TO PLAY LIVE DEMO](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Play%20in%20Browser-00e5ff?style=for-the-badge&logo=googlechrome&logoColor=white)](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)
 [![Architecture](https://img.shields.io/badge/Architecture-x86__64%20Bare--Metal-00ff88?style=for-the-badge)](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)
+[![Kernel](https://img.shields.io/badge/Kernel%20Binary-~515%20KB-7928ca?style=for-the-badge)](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)
 [![Status](https://img.shields.io/badge/Status-Pre--Alpha%20Active%20Dev-ffaa00?style=for-the-badge)](https://github.com/cyberenigma-lgtm/neuro-os-live-demo/issues)
+
+*Arranque real en Long Mode x86_64 dentro de tu navegador web mediante emulación WebAssembly de alto rendimiento.*
 
 [🇬🇧 English](#english) | [🇪🇸 Español](#español)
 
----
-
-<a name="english"></a>
-## 🇬🇧 English
-
-> ⚠️ **Project Status: Very Early Stage (Pre-Alpha / Active Development)**  
-> This repository hosts **only a compiled live demo build** for browser-based testing. The operating system is in a very early stage of construction, lacks many features, and is updated daily. Source code remains private/proprietary.
-
-### What is NEURO-OS?
-**NEURO-OS** is an experimental 64-bit (`x86_64`) *bare-metal* kernel written from scratch (~515 KB on disk) exploring a lightweight **multi-ABI capsule architecture** (Windows PE64, Linux ELF64, Android DEX, and macOS Mach-O) running directly over a custom microkernel without heavy virtual machines.
-
-### What you can test in this early build
-Although this is still a very basic foundation with many components under construction, this ISO image (`~14.6 MB`) already demonstrates:
-- **Fast Bare-Metal Boot:** Custom 64-bit kernel with per-process `CR3` page-table isolation.
-- **Experimental Graphical Environment:** Custom 2D/3D software compositor with basic window management and interactive desktop.
-- **VFS Explorer & Terminal:** Basic file navigation and isolated Ring-3 (`CPL=3`) user-mode binary execution.
-
-### What is still missing (Work in Progress)
-This project is far from a finished product. Current work focuses on:
-- Full compatibility with complex desktop GUI toolkits (GTK3 / advanced Win32).
-- Hardware-accelerated 3D graphics (`VirtIO-GPU` / Vulkan) and broader physical hardware drivers.
-- General stability and support for heavy commercial applications.
-
-### 🤝 Want to help or test it?
-This is an independent project in active evolution. If you are passionate about OS development, binary loaders (`ELF`/`PE`), device drivers, or graphics engines and want to share feedback, report bugs, or collaborate:
-- **Try the live browser demo** directly via [https://cyberenigma-lgtm.github.io/neuro-os-live-demo/](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/).
-- **Open an Issue** with your feedback, ideas, or collaboration proposals.
-
-*All rights reserved — Architecture & development by **JMMC**.*
+</div>
 
 ---
 
@@ -44,26 +23,63 @@ This is an independent project in active evolution. If you are passionate about 
 ## 🇪🇸 Español
 
 > ⚠️ **Estado del proyecto: Fase Muy Temprana (Pre-Alpha / Desarrollo Activo)**  
-> Este repositorio aloja **únicamente una compilación de demostración en vivo** para pruebas desde el navegador. El sistema operativo está en una fase muy inicial de construcción, aún le faltan muchas funciones y se actualiza constantemente. El código fuente es privado/propietario.
+> Este repositorio aloja **únicamente una compilación de demostración en vivo** para pruebas directas desde el navegador. El sistema operativo está en una fase inicial de investigación y desarrollo, faltan muchas funciones y se actualiza periódicamente. El código fuente permanece cerrado y propietario.
 
-### ¿Qué es NEURO-OS?
-**NEURO-OS** es un núcleo experimental *bare-metal* de 64 bits (`x86_64`) escrito desde cero (~515 KB en disco) que explora una arquitectura de **cápsulas ligeras multi-ABI** (Windows PE64, Linux ELF64, Android DEX y macOS Mach-O) ejecutándose sobre un microkernel propio sin virtualización pesada.
+### 🖥️ ¿Qué verás al abrir la demo interactiva?
+Al hacer clic en el enlace de la demo ([https://cyberenigma-lgtm.github.io/neuro-os-live-demo/](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)), el emulador WebAssembly cargará y ejecutará la imagen ISO real (`~14.6 MB`) mostrando:
+1. **Dock Superior Soberano (GXHTML):** Barra de iconos interactiva con efectos de halo neón y lanzadores integrados.
+2. **Motor Gráfico DVTRGAS-30 & Quartz Compositor:** Renderizado acelerado por software en búfer lineal VBE (`1280x720@32bpp`).
+3. **Fondo Cósmico Dinámico:** Starfield animado generado directamente por el kernel bare-metal.
+4. **Barra de Tareas Soberana (Workstation Taskbar):** Botón del sistema `[NEURO-OS]`, selector de escritorios `[1]..[6]`, reloj y control central.
+5. **Consola Serie en Vivo (COM1):** Panel de depuración que retransmite en tiempo real el registro del kernel (Caja Negra Ring-0, autodetección AHCI/NVMe, subsistema de syscalls MSR LSTAR y ciclo de fotogramas).
 
-### Qué puedes probar en esta compilación temprana
-Aunque todavía es una base muy inicial con muchas piezas en construcción, en esta imagen ISO (`~14,6 MB`) ya puedes probar:
-- **Arranque Bare-Metal en segundos:** Núcleo propio de 64 bits con aislamiento de tablas de páginas `CR3` por proceso.
-- **Entorno Gráfico Experimental:** Compositor 2D/3D propio por software con gestión básica de ventanas y escritorio interactivo.
-- **Explorador VFS y Terminal:** Navegación básica de archivos y ejecución aislada de binarios en modo usuario (`Ring-3` / `CPL=3`).
+---
 
-### Qué falta aún (En desarrollo)
-El sistema está lejos de ser un producto terminado; actualmente estamos trabajando en:
-- Compatibilidad completa con interfaces gráficas complejas (GTK3 / Win32 avanzado).
-- Aceleración 3D por hardware (`VirtIO-GPU` / Vulkan) y mayor soporte de drivers físicos.
-- Estabilización general y soporte para aplicaciones comerciales pesadas.
+### ⚙️ ¿Qué es NEURO-OS?
+**NEURO-OS** es un sistema operativo experimental *bare-metal* de 64 bits (`x86_64`) escrito desde cero (~515 KB de kernel en disco) que investiga una arquitectura de **cápsulas ligeras multi-ABI** (Windows PE64, Linux ELF64, Android DEX y macOS Mach-O) ejecutándose directamente sobre hardware sin máquinas virtuales pesadas.
+
+### 🚀 Ejecución Nativa en QEMU / KVM
+Si deseas ejecutar la ISO directamente en tu máquina con aceleración por hardware:
+```bash
+qemu-system-x86_64 -cdrom Neuro-OS-Live-Demo.iso -m 1024M -vga std
+```
 
 ### 🤝 ¿Quieres colaborar o probarlo?
-Este es un proyecto independiente en plena evolución. Si te apasiona el desarrollo de sistemas operativos, cargadores binarios (`ELF`/`PE`), drivers o motores gráficos y te gustaría aportar ideas, reportar fallos o colaborar en el desarrollo:
-- **Prueba la demo en vivo** directamente desde [https://cyberenigma-lgtm.github.io/neuro-os-live-demo/](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/).
-- **Abre un Issue** en este repositorio con tus comentarios, ideas o propuestas de colaboración.
+Este es un proyecto independiente en constante evolución. Si te apasiona el desarrollo de sistemas operativos, cargadores binarios (`ELF`/`PE`), drivers de hardware o motores gráficos vectoriales:
+- **Prueba la demo en vivo:** [https://cyberenigma-lgtm.github.io/neuro-os-live-demo/](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)
+- **Abre un Issue:** Comparte tus sugerencias, reporta incidencias o propón colaboraciones.
 
-*Todos los derechos reservados — Arquitectura y desarrollo por **JMMC**.*
+*Todos los derechos reservados — Arquitectura y desarrollo por **JMMC** (Noxferion).*
+
+---
+
+<a name="english"></a>
+## 🇬🇧 English
+
+> ⚠️ **Project Status: Very Early Stage (Pre-Alpha / Active Development)**  
+> This repository hosts **only a compiled live demo build** for browser-based testing. The operating system is in an early research & development phase, lacks many features, and is updated regularly. Source code remains proprietary.
+
+### 🖥️ What to expect in the Live Demo
+When launching the interactive demo ([https://cyberenigma-lgtm.github.io/neuro-os-live-demo/](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)), the WebAssembly engine boots the real bare-metal ISO (`~14.6 MB`), presenting:
+1. **Sovereign Top Dock (GXHTML):** Neon-halo application launcher dock rendered natively.
+2. **DVTRGAS-30 Vector Graphics & Quartz Compositor:** Software compositor blitting directly into the VBE Linear Framebuffer (`1280x720@32bpp`).
+3. **Cosmos Starfield Canvas:** Dynamic nebula starfield rendered directly by the 64-bit kernel.
+4. **Workstation Taskbar:** System menu `[NEURO-OS]`, workspace switchers `[1]..[6]`, clock, and control panel.
+5. **Live Kernel Serial Console (COM1):** Real-time diagnostic stream displaying Ring-0 telemetry, AHCI/NVMe bus probes, MSR LSTAR syscall init, and compositor loop metrics.
+
+---
+
+### ⚙️ What is NEURO-OS?
+**NEURO-OS** is an experimental 64-bit (`x86_64`) *bare-metal* kernel written from scratch (~515 KB kernel on disk) exploring a lightweight **multi-ABI capsule architecture** (Windows PE64, Linux ELF64, Android DEX, and macOS Mach-O) running directly on raw silicon without heavy hypervisors.
+
+### 🚀 Run the Real ISO Natively (QEMU / KVM)
+You can also run the bootable ISO locally with hardware virtualization:
+```bash
+qemu-system-x86_64 -cdrom Neuro-OS-Live-Demo.iso -m 1024M -vga std
+```
+
+### 🤝 Feedback & Collaboration
+- **Launch Browser Demo:** [https://cyberenigma-lgtm.github.io/neuro-os-live-demo/](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)
+- **Submit Feedback:** Open an issue to share bug reports or ideas.
+
+*All rights reserved — Architecture & development by **JMMC** (Noxferion).*
