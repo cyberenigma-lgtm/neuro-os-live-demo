@@ -92,7 +92,7 @@ async function startNeuroVM() {
     emulatorInstance = new V86({
       wasm_path:             "emu/v86.wasm",
       graphics_adapter:      "bochs_vga",
-      graphics_adapter_path: "emu/v86-bochs-vga.js?v=10",
+      graphics_adapter_path: "emu/v86-bochs-vga.js?v=11",
       screen_container:      document.getElementById("screen_container"),
       memory_size:    1024 * 1024 * 1024,
       vram_size:        16 * 1024 * 1024,
@@ -103,6 +103,7 @@ async function startNeuroVM() {
       disable_speaker: true,
       autostart: true,
     });
+    window.emulatorInstance = emulatorInstance;
 
     // ── Diagnostic event listeners ──────────────────────────────
     // COM1 serial output (NEURO-OS writes panics + debug here)
@@ -149,6 +150,25 @@ async function startNeuroVM() {
 
     emulatorInstance.add_listener("emulator-started", function() {
       console.log("[EMU] Started OK");
+      setInterval(() => {
+        if (!emulatorInstance || !emulatorInstance.v86) return;
+        const cpu = emulatorInstance.v86.cpu;
+        if (!cpu) return;
+        const rip = (cpu.instruction_pointer && cpu.instruction_pointer[0]) ? cpu.instruction_pointer[0].toString(16) : "?";
+        const ic = (cpu.instruction_counter && cpu.instruction_counter[0]) ? cpu.instruction_counter[0] : 0;
+        const canvas = document.querySelector("#screen_container canvas");
+        let pxInfo = "no-canvas";
+        if (canvas && canvas.width && canvas.height) {
+          try {
+            const ctx = canvas.getContext("2d", { willReadFrequently: true });
+            const p_top = ctx.getImageData(640, 26, 1, 1).data;
+            const p_mid = ctx.getImageData(640, 360, 1, 1).data;
+            const p_bot = ctx.getImageData(640, 700, 1, 1).data;
+            pxInfo = `top(${p_top[0]},${p_top[1]},${p_top[2]}) mid(${p_mid[0]},${p_mid[1]},${p_mid[2]}) bot(${p_bot[0]},${p_bot[1]},${p_bot[2]})`;
+          } catch(e) { pxInfo = e.message; }
+        }
+        console.log(`[CPU-HEARTBEAT] RIP=0x${rip} instructions=${ic} | Canvas: ${pxInfo}`);
+      }, 3000);
     });
 
     setProgress(100, "NEURO-OS Live Demo Running [1024 MB RAM | VBE Linear Framebuffer | x86_64]");
