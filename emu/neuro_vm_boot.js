@@ -156,6 +156,18 @@ async function startNeuroVM() {
         if (!cpu) return;
         const rip = (cpu.instruction_pointer && cpu.instruction_pointer[0]) ? cpu.instruction_pointer[0].toString(16) : "?";
         const ic = (cpu.instruction_counter && cpu.instruction_counter[0]) ? cpu.instruction_counter[0] : 0;
+        let rdi = "?", rsi = "?", cr3 = "?";
+        try {
+          if (cpu.reg32) {
+            const rdi_lo = cpu.reg32[7] >>> 0;
+            const rsi_lo = cpu.reg32[6] >>> 0;
+            const rdi_hi = cpu.x64_gpr_hi ? (cpu.x64_gpr_hi[7] >>> 0) : 0;
+            const rsi_hi = cpu.x64_gpr_hi ? (cpu.x64_gpr_hi[6] >>> 0) : 0;
+            rdi = "0x" + (rdi_hi ? rdi_hi.toString(16) : "") + rdi_lo.toString(16).padStart(8, "0");
+            rsi = "0x" + (rsi_hi ? rsi_hi.toString(16) : "") + rsi_lo.toString(16).padStart(8, "0");
+          }
+          if (cpu.cr && cpu.cr[3]) cr3 = "0x" + (cpu.cr[3] >>> 0).toString(16);
+        } catch(e) {}
         const canvas = document.querySelector("#screen_container canvas");
         let pxInfo = "no-canvas";
         if (canvas && canvas.width && canvas.height) {
@@ -167,7 +179,7 @@ async function startNeuroVM() {
             pxInfo = `top(${p_top[0]},${p_top[1]},${p_top[2]}) mid(${p_mid[0]},${p_mid[1]},${p_mid[2]}) bot(${p_bot[0]},${p_bot[1]},${p_bot[2]})`;
           } catch(e) { pxInfo = e.message; }
         }
-        console.log(`[CPU-HEARTBEAT] RIP=0x${rip} instructions=${ic} | Canvas: ${pxInfo}`);
+        console.log(`[CPU-HEARTBEAT] RIP=0x${rip} RDI=${rdi} RSI=${rsi} CR3=${cr3} | Canvas: ${pxInfo}`);
       }, 3000);
     });
 
