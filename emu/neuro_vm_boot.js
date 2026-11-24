@@ -92,7 +92,7 @@ async function startNeuroVM() {
     emulatorInstance = new V86({
       wasm_path:             "emu/v86.wasm",
       graphics_adapter:      "bochs_vga",
-      graphics_adapter_path: "emu/v86-bochs-vga.js?v=11",
+      graphics_adapter_path: "emu/v86-bochs-vga.js?v=12",
       screen_container:      document.getElementById("screen_container"),
       memory_size:    1024 * 1024 * 1024,
       vram_size:        16 * 1024 * 1024,

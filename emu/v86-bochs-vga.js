@@ -92,6 +92,28 @@ g=new Uint8Array(8);switch(h){case 0:m<<=0;q<<=1;t<<=2;u<<=3;for(var r=7;0<=r;r-
 a++)this.pixel_buffer[a]=g[r]}};
 D.prototype.vga_redraw=function(){var a=this.diff_addr_min,b=Math.min(this.diff_addr_max,524287);const c=new Int32Array(this.machine.wasm_memory.buffer,this.dest_buffer_offset,this.virtual_width*this.virtual_height);var d=255,h=0;this.attribute_mode&128&&(d&=207,h|=this.color_select<<4&48);if(this.attribute_mode&64)for(;a<=b;a++){var k=this.pixel_buffer[a]&d|h;k=this.vga256_palette[k];c[a]=k&65280|k<<16|k>>16|4278190080}else for(d&=63,h|=this.color_select<<4&192;a<=b;a++)k=this.dac_map[this.pixel_buffer[a]&
 this.color_plane_enable]&d|h,k=this.vga256_palette[k],c[a]=k&65280|k<<16|k>>16|4278190080};
-D.prototype.render=function(){if(this.graphical_mode&&this.pixels){0===this.pixels.data.byteLength&&(this.create_pixel_view(),this.update_layers());if(this.svga_enabled){let c=0,d=this.svga_height;if(8===this.svga_bpp){const h=new Int32Array(this.machine.wasm_memory.buffer,this.dest_buffer_offset,this.screen_width*this.screen_height),k=new Uint8Array(this.machine.wasm_memory.buffer,this.svga_memory.byteOffset,this.vga_memory_size),g=this.svga_offset,m=Math.min(h.length,this.vga_memory_size-g);for(var a=
-0;a<m;a++){var b=this.vga256_palette[k[g+a]];h[a]=b&65280|b<<16|b>>16|4278190080}}else this.machine.mmio_ram_fill_pixels(this.lfb_region,this.svga_bpp,this.svga_offset);this.display.update_buffer([{pixels:this.pixels,screen_x:0,screen_y:0,buffer_x:0,buffer_y:0,buffer_width:this.svga_width,buffer_height:this.svga_height}])}else this.vga_replot(),this.vga_redraw(),this.display.update_buffer(this.layers);this.reset_diffs()}};D.prototype.set_font_bitmap=function(a){const b=this.max_scan_line&31;if(b&&!this.graphical_mode){const c=!!(this.clocking_mode&8);this.display.set_font_bitmap(b+1,!c&&!(this.clocking_mode&1),c,!!(this.attribute_mode&4),this.plane2,a)}};
+D.prototype.render=function(){
+    if(this.graphical_mode&&this.pixels){
+        0===this.pixels.data.byteLength&&(this.create_pixel_view(),this.update_layers());
+        if(this.svga_enabled){
+            let c=0,d=this.svga_height;
+            if(8===this.svga_bpp){
+                const h=new Int32Array(this.machine.wasm_memory.buffer,this.dest_buffer_offset,this.screen_width*this.screen_height),
+                      k=new Uint8Array(this.machine.wasm_memory.buffer,this.svga_memory.byteOffset,this.vga_memory_size),
+                      g=this.svga_offset,m=Math.min(h.length,this.vga_memory_size-g);
+                for(var a=0;a<m;a++){var b=this.vga256_palette[k[g+a]];h[a]=b&65280|b<<16|b>>16|4278190080}
+            } else {
+                this.machine.mmio_ram_fill_pixels(this.lfb_region,this.svga_bpp,this.svga_offset);
+            }
+            if(!window._vga_last_dbg || (Date.now() - window._vga_last_dbg > 3000)){
+                window._vga_last_dbg = Date.now();
+                let nz = 0;
+                for(let i=0; i<4096; i++) if(this.svga_memory[i]!==0) nz++;
+                console.log(`[VGA-PROBE] lfb_addr=0x${(this.lfb_address||0).toString(16)} bpp=${this.svga_bpp} svga_mem_nz=${nz} px0=${this.pixels.data[0]},${this.pixels.data[1]},${this.pixels.data[2]}`);
+            }
+            this.display.update_buffer([{pixels:this.pixels,screen_x:0,screen_y:0,buffer_x:0,buffer_y:0,buffer_width:this.svga_width,buffer_height:this.svga_height}]);
+        }else this.vga_replot(),this.vga_redraw(),this.display.update_buffer(this.layers);
+        this.reset_diffs()
+    }
+};D.prototype.set_font_bitmap=function(a){const b=this.max_scan_line&31;if(b&&!this.graphical_mode){const c=!!(this.clocking_mode&8);this.display.set_font_bitmap(b+1,!c&&!(this.clocking_mode&1),c,!!(this.attribute_mode&4),this.plane2,a)}};
 D.prototype.set_font_page=function(){const a=[0,2,4,6,1,3,5,7],b=(this.character_map_select&12)>>2|(this.character_map_select&32)>>3,c=this.character_map_select&3|(this.character_map_select&16)>>2;this.font_page_ab_enabled=b!==c;this.display.set_font_page(a[b],a[c]);this.complete_redraw()};var E={name:"bochs_vga",pci_vendor:4660,pci_device:4369,create:(a,b)=>{const c=new D(new A(a),b.vram_size||8388608);return{vga:c,get_state:()=>c.get_state(),set_state:d=>c.set_state(d)}}};(globalThis.V86GraphicsAdapters||(globalThis.V86GraphicsAdapters={}))[E.name]=E;}).call(this);
