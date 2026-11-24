@@ -96,7 +96,10 @@ D.prototype.render=function(){
     if(this.graphical_mode&&this.pixels){
         0===this.pixels.data.byteLength&&(this.create_pixel_view(),this.update_layers());
         if(this.svga_enabled){
-            let c=0,d=this.svga_height;
+            let now = performance.now();
+            if(this._last_render && (now - this._last_render < 32)) return;
+            this._last_render = now;
+
             if(8===this.svga_bpp){
                 const h=new Int32Array(this.machine.wasm_memory.buffer,this.dest_buffer_offset,this.screen_width*this.screen_height),
                       k=new Uint8Array(this.machine.wasm_memory.buffer,this.svga_memory.byteOffset,this.vga_memory_size),
@@ -104,12 +107,6 @@ D.prototype.render=function(){
                 for(var a=0;a<m;a++){var b=this.vga256_palette[k[g+a]];h[a]=b&65280|b<<16|b>>16|4278190080}
             } else {
                 this.machine.mmio_ram_fill_pixels(this.lfb_region,this.svga_bpp,this.svga_offset);
-            }
-            if(!window._vga_last_dbg || (Date.now() - window._vga_last_dbg > 3000)){
-                window._vga_last_dbg = Date.now();
-                let nz = 0;
-                for(let i=0; i<4096; i++) if(this.svga_memory[i]!==0) nz++;
-                console.log(`[VGA-PROBE] lfb_addr=0x${(this.lfb_address||0).toString(16)} bpp=${this.svga_bpp} svga_mem_nz=${nz} px0=${this.pixels.data[0]},${this.pixels.data[1]},${this.pixels.data[2]}`);
             }
             this.display.update_buffer([{pixels:this.pixels,screen_x:0,screen_y:0,buffer_x:0,buffer_y:0,buffer_width:this.svga_width,buffer_height:this.svga_height}]);
         }else this.vga_replot(),this.vga_redraw(),this.display.update_buffer(this.layers);

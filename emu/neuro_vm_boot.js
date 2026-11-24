@@ -92,7 +92,7 @@ async function startNeuroVM() {
     emulatorInstance = new V86({
       wasm_path:             "emu/v86.wasm",
       graphics_adapter:      "bochs_vga",
-      graphics_adapter_path: "emu/v86-bochs-vga.js?v=13",
+      graphics_adapter_path: "emu/v86-bochs-vga.js?v=15",
       screen_container:      document.getElementById("screen_container"),
       memory_size:    1024 * 1024 * 1024,
       vram_size:        16 * 1024 * 1024,
@@ -101,6 +101,7 @@ async function startNeuroVM() {
       cdrom:    { buffer: isoBuffer },
       net_device:      { type: "none" },
       disable_speaker: true,
+      fastboot: true,
       autostart: true,
     });
     window.emulatorInstance = emulatorInstance;
@@ -149,38 +150,7 @@ async function startNeuroVM() {
     });
 
     emulatorInstance.add_listener("emulator-started", function() {
-      console.log("[EMU] Started OK");
-      setInterval(() => {
-        if (!emulatorInstance || !emulatorInstance.v86) return;
-        const cpu = emulatorInstance.v86.cpu;
-        if (!cpu) return;
-        const rip = (cpu.instruction_pointer && cpu.instruction_pointer[0]) ? cpu.instruction_pointer[0].toString(16) : "?";
-        const ic = (cpu.instruction_counter && cpu.instruction_counter[0]) ? cpu.instruction_counter[0] : 0;
-        let rdi = "?", rsi = "?", cr3 = "?";
-        try {
-          if (cpu.reg32) {
-            const rdi_lo = cpu.reg32[7] >>> 0;
-            const rsi_lo = cpu.reg32[6] >>> 0;
-            const rdi_hi = cpu.x64_gpr_hi ? (cpu.x64_gpr_hi[7] >>> 0) : 0;
-            const rsi_hi = cpu.x64_gpr_hi ? (cpu.x64_gpr_hi[6] >>> 0) : 0;
-            rdi = "0x" + (rdi_hi ? rdi_hi.toString(16) : "") + rdi_lo.toString(16).padStart(8, "0");
-            rsi = "0x" + (rsi_hi ? rsi_hi.toString(16) : "") + rsi_lo.toString(16).padStart(8, "0");
-          }
-          if (cpu.cr && cpu.cr[3]) cr3 = "0x" + (cpu.cr[3] >>> 0).toString(16);
-        } catch(e) {}
-        const canvas = document.querySelector("#screen_container canvas");
-        let pxInfo = "no-canvas";
-        if (canvas && canvas.width && canvas.height) {
-          try {
-            const ctx = canvas.getContext("2d", { willReadFrequently: true });
-            const p_top = ctx.getImageData(640, 26, 1, 1).data;
-            const p_mid = ctx.getImageData(640, 360, 1, 1).data;
-            const p_bot = ctx.getImageData(640, 700, 1, 1).data;
-            pxInfo = `top(${p_top[0]},${p_top[1]},${p_top[2]}) mid(${p_mid[0]},${p_mid[1]},${p_mid[2]}) bot(${p_bot[0]},${p_bot[1]},${p_bot[2]})`;
-          } catch(e) { pxInfo = e.message; }
-        }
-        console.log(`[CPU-HEARTBEAT] RIP=0x${rip} RDI=${rdi} RSI=${rsi} CR3=${cr3} | Canvas: ${pxInfo}`);
-      }, 3000);
+      console.log("[EMU] Started OK â€” Real 64-bit Long Mode Kernel active");
     });
 
     setProgress(100, "NEURO-OS Live Demo Running [1024 MB RAM | VBE Linear Framebuffer | x86_64]");
