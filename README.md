@@ -85,3 +85,10 @@ qemu-system-x86_64 -cdrom Neuro-OS-Live-Demo.iso -m 1024M -vga std
 - **Submit Feedback:** Open an issue to share bug reports or ideas.
 
 *All rights reserved — Architecture & development by **JMMC** (Noxferion).*
+
+---
+
+### ⚖️ Transparencia Legal y Atribución / Legal Attribution
+- **NEURO-OS Kernel & ISO Image:** © Propiedad Intelectual y Marca Registrada *"NeuroOs Genesis"* por **José Manuel Moreno Cano (Noxferion)**. Sello: `0x4A4D4D43`.
+- **NeuroWeb-Boot Engine (MMIO LFB, Throttling & SDK):** Registrado en **Safe Creative ID: [`2611247743117`](https://www.safecreative.org/work/2611247743117)**. Motor en: [`cyberenigma-lgtm/neuroweb-boot`](https://github.com/cyberenigma-lgtm/neuroweb-boot).
+- **Componentes Base de Virtualización:** Emulador Wasm base bajo licencia **BSD 2-Clause** (© Fabian Hemmer) y SeaBIOS bajo **GNU LGPLv3**.
