@@ -10,6 +10,8 @@
 [![Architecture](https://img.shields.io/badge/Architecture-x86__64%20Bare--Metal-00ff88?style=for-the-badge)](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)
 [![Kernel](https://img.shields.io/badge/Kernel%20Binary-~515%20KB-7928ca?style=for-the-badge)](https://cyberenigma-lgtm.github.io/neuro-os-live-demo/)
 [![Status](https://img.shields.io/badge/Status-Pre--Alpha%20Active%20Dev-ffaa00?style=for-the-badge)](https://github.com/cyberenigma-lgtm/neuro-os-live-demo/issues)
+[![Engine](https://img.shields.io/badge/Engine-NeuroWeb--Boot%20x64-00e5ff?style=for-the-badge&logo=webassembly&logoColor=black)](https://github.com/cyberenigma-lgtm/neuroweb-boot)
+[![Safe Creative](https://img.shields.io/badge/SAFE_CREATIVE-2611247743117-5A189A?style=for-the-badge&logo=vault&logoColor=white)](https://www.safecreative.org/work/2611247743117)
 
 *Arranque real en Long Mode x86_64 dentro de tu navegador web mediante emulación WebAssembly de alto rendimiento.*
 
